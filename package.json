@@ -1,0 +1,27 @@
+{
+  "name": "blog",
+  "version": "1.0.0",
+  "description": "this is a blog project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brother-forteen/blog.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/brother-forteen/blog/issues"
+  },
+  "homepage": "https://github.com/brother-forteen/blog#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cookies": "^0.8.0",
+    "express": "^4.17.1",
+    "markdown": "^0.5.0",
+    "mongoose": "^5.9.21",
+    "swig": "^1.4.2"
+  }
+}
