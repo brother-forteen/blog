@@ -3,17 +3,46 @@
  * **/
 
 // 加载express模块
-var express = require("express");
+const express = require("express");
 
 // 加载模板处理模块
-var swig = require("swig");
+const swig = require("swig");
 const { Mongoose } = require("mongoose");
 
 // 加载数据库模块
-var mongoose = require("mongoose");
+const mongoose = require("mongoose");
+
+// body-parser 用来解析前端post提交过来的数据
+const bodyParser = require("body-parser");
+
+// 跨域
+const cors = require("cors");
 
 // 创建app应用
-var app = express();
+const app = express();
+
+app.use(cors());
+
+//设置跨域访问
+// app.all("*", function (req, res, next) {
+//     res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
+//     res.header(
+//         "Access-Control-Allow-Headers",
+//         "Content-Type,Content-Length, Authorization,Origin,Accept,X-Requested-With"
+//     );
+//     res.header(
+//         "Access-Control-Allow-Methods",
+//         "GET, POST, OPTIONS, PUT, PATCH, DELETE"
+//     );
+//     res.header("Access-Control-Allow-Credentials", true);
+//     res.header("X-Powered-By", " 3.2.1");
+//     res.header("Content-Type", "application/json;charset=utf-8");
+//     if (req.method === "OPTIONS") {
+//         res.sendStatus(200);
+//     } else {
+//         next();
+//     }
+// });
 
 // 设置静态文件托管
 // 当用户访问的url以/public开始的时候，直接返回对应的__dirname + '/public下的文件
@@ -34,6 +63,10 @@ app.set("views", "./views");
 // 第一个参数必须是view engine
 // 第二个参数和app.engine这个方法中定义的模板引擎的名称（第一个参数）是一致的
 app.set("view engine", "html");
+
+// body-parser 设置
+app.use(bodyParser.json()); // json请求
+app.use(bodyParser.urlencoded({ extended: true })); // 表单请求
 
 // 取消模板缓存
 swig.setDefaults({
@@ -58,27 +91,6 @@ swig.setDefaults({
 app.use("/", require("./routers/main"));
 app.use("/api", require("./routers/api"));
 app.use("/admin", require("./routers/admin"));
-
-//设置跨域访问
-app.all("*", function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
-    res.header(
-        "Access-Control-Allow-Headers",
-        "Content-Type,Content-Length, Authorization,Origin,Accept,X-Requested-With"
-    );
-    res.header(
-        "Access-Control-Allow-Methods",
-        "GET, POST, OPTIONS, PUT, PATCH, DELETE"
-    );
-    res.header("Access-Control-Allow-Credentials", true);
-    res.header("X-Powered-By", " 3.2.1");
-    res.header("Content-Type", "application/json;charset=utf-8");
-    if (req.method === "OPTIONS") {
-        res.sendStatus(200);
-    } else {
-        next();
-    }
-});
 
 // 监听http请求
 mongoose.connect("mongodb://localhost:27018/blog", function (err) {

@@ -1,5 +1,6 @@
 var express = require("express");
 var router = express.Router();
+var querystring = require("querystring");
 
 // 统一返回格式
 var responseData;
@@ -17,8 +18,10 @@ router.use(function (req, res, next) {
  * 校验 空 密码一致 是否注册过
  * **/
 
-router.get("/user/register", function (req, res, next) {
-    console.log(req.body);
+router.post("/user/register", (req, res, next) => {
+    // console.log(req);
+    // console.log(res);
+    console.log(req.body.userName);
     var userName = req.body.userName;
     var password = req.body.password;
     var rePassword = req.body.rePassword;
@@ -44,6 +47,19 @@ router.get("/user/register", function (req, res, next) {
 
     responseData.message = "注册成功";
     res.json(responseData);
+
+    // let postData = "";
+    // // 数据块接收中
+    // req.addListener("data", (postDataChunk) => {
+    //     postData += postDataChunk;
+    // });
+    // // 数据接收完毕，执行回调函数
+    // req.addListener("end", () => {
+    //     console.log(postData);
+    //     console.log(postData["userName"]);
+    //     // var params = querystring.parse(postData);
+    //     // console.log(params);
+    // });
 });
 
 module.exports = router;
