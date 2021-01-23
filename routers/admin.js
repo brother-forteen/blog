@@ -85,7 +85,7 @@ router.post("/user/register", (req, res, next) => {
  * @description: 登录
  * **/
 router.post("/user/login", (req, res, next) => {
-    console.log(req.body);
+    // console.log(req.body);
     let userName = req.body.userName;
     let password = req.body.password;
 
@@ -124,11 +124,58 @@ router.post("/user/login", (req, res, next) => {
                 id: userInfo._id,
                 userName: userInfo.userName,
                 password: userInfo.password,
+                role: userInfo.role || "visitor",
             };
+            req.cookies.set('userInfo', JSON.stringify({
+                id: userInfo._id,
+                userName: userInfo.userName
+            }));
             res.json(responseData);
             return;
         });
     });
 });
 
+
+/**
+ * @description: 退出登录
+ * **/ 
+router.get('/user/logout', (req, res, next) => {
+    req.cookies.set('userInfo', null);
+    responseData.message = '退出成功';
+    res.json(responseData);
+});
 module.exports = router;
+
+/**
+ * @description: 查找用户列表
+ * @param: pageSize(Number) 分页限制
+ * @param: pageNo(Number) 忽略数据的条数
+ * **/ 
+router.get('/user/list', (req, res, next) => {
+
+
+    let pageSize = req.query && req.query.pageSize && typeof req.query.pageSize === 'number' ? req.query.pageSize : 10;
+    let pageNo = req.query && req.query.pageNo && typeof req.query.pageNo === 'number' ? req.query.pageNo : 1;
+    let skip = (pageNo - 1) * pageSize;
+
+    User.count().then(count =>{
+        let totalCount = count;
+        let totalPage = Math.ceil(totalCount / pageSize);
+
+        // sort 1升序 -1降序
+        User.find().sort({_id: -1}).limit(pageSize).skip(skip).then(list => {
+            responseData.message = "请求成功";
+            responseData.data = {
+                pageSize: pageSize,
+                pageNo: pageNo,
+                totalCount: totalCount,
+                totalPage: totalPage,
+                data: list
+            }
+            res.json(responseData);
+    
+            return;
+        })
+    })
+})
