@@ -119,6 +119,7 @@ router.get('/list', (req, res, next) => {
         let totalPage = Math.ceil(totalCount / pageSize);
 
         Category.find().sort({_id: -1}).limit(pageSize).skip(skip).then(list => {
+            responseData.code = 0;
             responseData.message = "请求成功";
             responseData.data = {
                 pageSize: pageSize,
@@ -127,9 +128,8 @@ router.get('/list', (req, res, next) => {
                 totalPage: totalPage,
                 data: list
             }
-            res.json(responseData);
-    
-            return;
+            
+            return res.json(responseData);
         })
     })
 });

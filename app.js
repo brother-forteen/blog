@@ -78,6 +78,7 @@ app.use("/", require("./routers/main"));
 app.use("/api", require("./routers/api"));
 app.use("/admin", require("./routers/admin"));
 app.use("/category", require("./routers/category"));
+app.use("/article", require("./routers/article"));
 
 // 监听http请求
 mongoose.connect("mongodb://localhost:27018/blog", { useNewUrlParser: true, useUnifiedTopology: true });
